@@ -30,11 +30,11 @@
 *(Tolong ganti/upload gambar screenshot di bawah ini di folder repository kamu biar tampil di sini!)*
 
 ### 1. Halaman Dashboard & Gamifikasi
-![Dashboard Screenshot](./screenshot-dashboard.png)
+![Dashboard Screenshot](./foto/screenshot-dashboard.png)
 *Menampilkan statistik mingguan, progress XP, level pengguna, dan target kategori.*
 
 ### 2. AI Chatbot Widget
-![Chatbot Screenshot](./screenshot-chatbot.png)
+![Chatbot Screenshot](./foto/screenshot-chatbot.png)
 *Widget asisten cerdas yang memberikan motivasi dan saran harian.*
 
 ---

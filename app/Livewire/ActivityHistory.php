@@ -71,7 +71,7 @@ class ActivityHistory extends Component
                 'date' => $this->editDate,
                 'start_time' => $this->editStartTime,
                 'end_time' => $this->editEndTime,
-                'duration_minutes' => $end->diffInMinutes($start),
+                'duration_minutes' => $start->diffInMinutes($end),
                 'category' => $this->editCategory,
                 'description' => $this->editDescription,
             ]);

@@ -42,7 +42,7 @@ class ActivityForm extends Component
             $end->addDay();
         }
 
-        $durationMinutes = $end->diffInMinutes($start);
+        $durationMinutes = $start->diffInMinutes($end);
 
         Auth::user()->activities()->create([
             'date' => $this->date,

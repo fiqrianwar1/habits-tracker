@@ -120,11 +120,4 @@ Aplikasi ini mendukung E2E testing menggunakan Playwright untuk mensimulasikan i
    npx playwright show-report
    ```
 
----
 
-## 👨‍💻 Informasi Penulis
-
-- **Nama:** [NAMA_KAMU_DISINI]
-- **NIM:** [NIM_KAMU_DISINI]
-- **Program Studi:** [PRODI_KAMU_DISINI]
-- **Email Akademik:** [EMAIL_KAMU_DISINI]

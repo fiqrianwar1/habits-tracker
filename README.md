@@ -39,19 +39,6 @@
 
 ---
 
-## 🛠 Tumpukan Teknologi (Tech Stack)
-
-<p align="center">
-  <img src="https://skillicons.dev/icons?i=laravel,php,sqlite,tailwind,js,html,vscode,git" />
-</p>
-
-- **Backend:** Laravel 11 (PHP 8.2+)
-- **Frontend:** Laravel Livewire 3 & Alpine.js
-- **Styling:** Tailwind CSS
-- **Database:** SQLite (Bawaan) / MySQL
-- **Testing:** PHPUnit & Playwright (E2E)
-
----
 
 ## 🚀 Langkah Instalasi
 
@@ -124,6 +111,18 @@ Aplikasi ini mendukung E2E testing menggunakan Playwright untuk mensimulasikan i
    npx playwright show-report
    ```
 
+
+## 🛠 Tumpukan Teknologi (Tech Stack)
+
+<p align="center">
+  <img src="https://skillicons.dev/icons?i=laravel,php,sqlite,tailwind,js,html,vscode,git" />
+</p>
+
+- **Backend:** Laravel 11 (PHP 8.2+)
+- **Frontend:** Laravel Livewire 3 & Alpine.js
+- **Styling:** Tailwind CSS
+- **Database:** SQLite (Bawaan) / MySQL
+- **Testing:** PHPUnit & Playwright (E2E)
 
 ---
 

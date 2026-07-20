@@ -41,6 +41,10 @@
 
 ## 🛠 Tumpukan Teknologi (Tech Stack)
 
+<p align="center">
+  <img src="https://skillicons.dev/icons?i=laravel,php,sqlite,tailwind,js,html,vscode,git" />
+</p>
+
 - **Backend:** Laravel 11 (PHP 8.2+)
 - **Frontend:** Laravel Livewire 3 & Alpine.js
 - **Styling:** Tailwind CSS
@@ -121,3 +125,9 @@ Aplikasi ini mendukung E2E testing menggunakan Playwright untuk mensimulasikan i
    ```
 
 
+---
+
+<p align="center">
+   Dibuat dengan ❤️ untuk membantu membangun kebiasaan yang lebih baik.<br>
+   <b>Habits Tracker © 2026</b>
+</p>

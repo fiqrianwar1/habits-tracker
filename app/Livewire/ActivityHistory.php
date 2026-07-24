@@ -87,7 +87,7 @@ class ActivityHistory extends Component
         $activities = Auth::user()->activities()
             ->orderBy('date', 'desc')
             ->orderBy('start_time', 'desc')
-            ->paginate(15);
+            ->paginate(4);
 
         // Fetch all category targets for the user
         $categoryTargets = Auth::user()->categoryTargets()->get();

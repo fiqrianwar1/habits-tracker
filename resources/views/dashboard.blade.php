@@ -7,7 +7,7 @@
         </h2>
     </x-slot>
 
-    <div class="py-8 z-10 relative">
+    <div class="pt-8 pb-24 z-10 relative">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             
             <!-- Top Section: Stats & Charts -->
@@ -16,7 +16,7 @@
             </div>
 
             <!-- Bottom Section: Form & History -->
-            <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
                 
                 <!-- Left: Form -->
                 <div class="flex flex-col h-full animate-fade-in-up opacity-0" style="animation-delay: 0.2s;">

@@ -2,7 +2,7 @@
   <br>
   <h1>Habits Tracker + Gamification 🏆</h1>
   <p>
-    <strong>Aplikasi pelacak kebiasaan (Habit Tracker) berbasis gamifikasi untuk meningkatkan produktivitas harian.</strong>
+    <strong>Aplikasi pelacak kebiasaan (Habit Tracker) berbasis gamifikasi modern untuk meningkatkan produktivitas harian.</strong>
   </p>
 </div>
 
@@ -10,28 +10,28 @@
 
 ## 📖 Deskripsi Singkat
 
-**Habits Tracker** adalah aplikasi berbasis web yang membantu pengguna melacak kebiasaan harian dan tugas-tugas penting dengan pendekatan *gamifikasi*. Setiap tugas yang diselesaikan akan memberikan **Experience Points (XP)** kepada pengguna, yang memungkinkan mereka untuk naik level dan mengumpulkan **Badge** (Lencana) pencapaian. Aplikasi ini dirancang agar pengguna lebih termotivasi dalam mencapai target harian mereka secara konsisten.
+**Habits Tracker** adalah aplikasi berbasis web yang membantu pengguna melacak kebiasaan harian dan tugas-tugas penting dengan pendekatan *gamifikasi*. Setiap tugas atau sesi fokus yang diselesaikan akan memberikan **Experience Points (XP)** kepada pengguna, memungkinkan mereka naik level, mengumpulkan **Badge** pencapaian, dan mempertahankan **Habit Streak (🔥)** harian. Aplikasi ini dirancang agar produktivitas terasa menyenangkan dan nagih!
 
 ---
 
-## 🌟 Daftar Fitur
+## 🌟 Daftar Fitur Unggulan
 
-- **Manajemen Kebiasaan & Tugas:** Tambah, edit, dan tandai kebiasaan atau tugas harian yang sudah selesai.
-- **Sistem Gamifikasi (XP & Leveling):** Dapatkan poin XP untuk setiap aktivitas positif dan saksikan level Anda meningkat.
-- **Koleksi Badge (Lencana):** Buka berbagai badge pencapaian (misal: *7 Day Streak*, *Task Master*) sebagai bentuk apresiasi atas konsistensi.
-- **Target Kategori:** Tetapkan target khusus untuk kategori tertentu (Kesehatan, Pekerjaan, Pribadi, dll).
-- **Dashboard & Statistik Interaktif:** Pantau perkembangan kebiasaan Anda melalui grafik dan ringkasan yang menarik.
-- **🤖 AI Chatbot Widget:** Asisten AI cerdas bawaan yang siap memberikan motivasi, saran kebiasaan, dan bantuan kapan saja.
+- 🍅 **Mode Fokus Pomodoro Interaktif:** Timer fokus (25m Focus, 5m Short Break, 15m Long Break) interaktif dengan auto-log kegiatan & pencatatan XP otomatis.
+- 🔥 **Habit Streak Counter:** Lacak rekor konsistensi harian (*Current Streak* vs *Best Streak*) dengan indikator api interaktif.
+- 🎉 **Gamifikasi Audio-Visual & Leveling:** Sistem XP, efek suara *synth victory chime*, dan efek ledakan *confetti* perayaan saat menyelesaikan habit/naik level.
+- 🏆 **Koleksi Badge (Lencana Pencapaian):** Dapatkan badge bergengsi secara otomatis seiring meningkatnya produktivitas kamu.
+- 🤖 **AI Chatbot Widget:** Asisten cerdas berbasis AI bawaan yang siap memberikan motivasi, saran kebiasaan, dan bantuan kapan saja.
+- 📊 **Dashboard & Heatmap Kontribusi:** Grafik statistik produktivitas harian/tahunan serta *contribution heatmap* (ala GitHub) 365 hari terakhir.
+- 🎯 **Target & Plan Kategori:** Tetapkan dan evaluasi target hari & jam minimal harian per kategori aktivitas (Belajar, Pekerjaan, Kesehatan, dll).
+- 📝 **Track Record & Riwayat Aktivitas:** Filter, pencarian, dan pagination lengkap untuk meninjau kembali seluruh riwayat kegiatan.
 
 ---
 
 ## 📸 Tangkapan Layar (Screenshots)
 
-*(Tolong ganti/upload gambar screenshot di bawah ini di folder repository kamu biar tampil di sini!)*
-
 ### 1. Halaman Dashboard & Gamifikasi
 ![Dashboard Screenshot](./foto/screenshot-dashboard.png)
-*Menampilkan statistik mingguan, progress XP, level pengguna, dan target kategori.*
+*Menampilkan statistik produktivitas, Pomodoro timer, progress XP, level pengguna, streak counter, dan target kategori.*
 
 ### 2. AI Chatbot Widget
 ![Chatbot Screenshot](./foto/screenshot-chatbot.png)
@@ -39,15 +39,14 @@
 
 ---
 
-
 ## 🚀 Langkah Instalasi
 
 Ikuti langkah-langkah berikut untuk menjalankan aplikasi ini secara lokal di mesin Anda.
 
 1. **Clone repository ini**
    ```bash
-   git clone https://github.com/USERNAME/habits.git
-   cd habits
+   git clone https://github.com/fiqrianwar1/habits-tracker.git
+   cd habits-tracker
    ```
 
 2. **Install dependensi PHP (Composer)**
@@ -73,18 +72,16 @@ Ikuti langkah-langkah berikut untuk menjalankan aplikasi ini secara lokal di mes
    ```
 
 6. **Konfigurasi Database**
-   Secara default, aplikasi menggunakan SQLite. Anda tidak perlu mengubah banyak hal, cukup jalankan migrasi. (Pastikan berkas `database/database.sqlite` ada, atau akan dibuat otomatis oleh Laravel).
-   
-7. **Jalankan Migrasi & Database Seeder (Opsional untuk data dummy)**
+   Secara default, aplikasi menggunakan SQLite. Jalankan migrasi dan seeder:
    ```bash
    php artisan migrate --seed
    ```
 
-8. **Jalankan Development Server**
+7. **Jalankan Development Server**
    ```bash
    php artisan serve
    ```
-   *Buka `http://localhost:8000` di browser Anda.*
+   *Buka `http://localhost:8000` atau via Laravel Herd (`http://habits.test`) di browser Anda.*
 
 ---
 
@@ -98,19 +95,12 @@ php artisan test
 
 ### Playwright (End-to-End Tests)
 Aplikasi ini mendukung E2E testing menggunakan Playwright untuk mensimulasikan interaksi pengguna di browser.
-1. Pastikan dependensi Playwright sudah terinstal:
-   ```bash
-   npm init playwright@latest
-   ```
-2. Jalankan pengujian Playwright:
-   ```bash
-   npx playwright test
-   ```
-3. Untuk melihat laporan hasil tes Playwright secara visual:
-   ```bash
-   npx playwright show-report
-   ```
+```bash
+npm init playwright@latest
+npx playwright test
+```
 
+---
 
 ## 🛠 Tumpukan Teknologi (Tech Stack)
 
@@ -119,9 +109,10 @@ Aplikasi ini mendukung E2E testing menggunakan Playwright untuk mensimulasikan i
 </p>
 
 - **Backend:** Laravel 11 (PHP 8.2+)
-- **Frontend:** Laravel Livewire 3 & Alpine.js
-- **Styling:** Tailwind CSS
-- **Database:** SQLite (Bawaan) / MySQL
+- **Frontend:** Laravel Livewire 3, Alpine.js & Chart.js
+- **Styling:** Tailwind CSS (Custom Dark Mode & Glassmorphism)
+- **Database:** SQLite / MySQL
+- **Audio & Visual:** Web Audio API Synth & Canvas-Confetti
 - **Testing:** PHPUnit & Playwright (E2E)
 
 ---

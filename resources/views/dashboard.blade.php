@@ -15,6 +15,11 @@
                 <livewire:dashboard-stats />
             </div>
 
+            <!-- Middle Section: Pomodoro Focus Timer -->
+            <div class="animate-fade-in-up opacity-0" style="animation-delay: 0.15s;">
+                <livewire:pomodoro-timer />
+            </div>
+
             <!-- Bottom Section: Form & History -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
                 

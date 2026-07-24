@@ -9,11 +9,18 @@
                     {{ substr($userProfile['name'] ?? 'U', 0, 1) }}
                 </div>
                 <div class="flex-1">
-                    <h2 class="text-2xl font-black text-gray-900 dark:text-white flex items-center gap-2">
+                    <h2 class="text-2xl font-black text-gray-900 dark:text-white flex flex-wrap items-center gap-2">
                         {{ $userProfile['name'] ?? 'User' }}
                         <span class="px-2 py-1 bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 text-xs rounded-full border border-yellow-500/30 uppercase tracking-widest font-bold">
                             Level {{ $userProfile['level'] ?? 1 }}
                         </span>
+
+                        <!-- Flame Streak Counter Badge -->
+                        <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-gradient-to-r from-orange-500/20 via-red-500/20 to-amber-500/20 border border-orange-500/40 rounded-full text-orange-600 dark:text-orange-400 text-xs font-black shadow-sm">
+                            <span class="text-sm animate-bounce">🔥</span>
+                            <span>{{ $userProfile['current_streak'] ?? 0 }} Hari Streak</span>
+                            <span class="text-[10px] text-gray-400 font-normal opacity-80">(Rekor: {{ $userProfile['best_streak'] ?? 0 }} Hari)</span>
+                        </div>
                     </h2>
                     
                     <div class="mt-3">

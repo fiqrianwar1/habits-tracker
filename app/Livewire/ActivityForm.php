@@ -44,7 +44,10 @@ class ActivityForm extends Component
 
         $durationMinutes = $start->diffInMinutes($end);
 
-        Auth::user()->activities()->create([
+        $user = Auth::user();
+        $oldLevel = $user->level;
+
+        $user->activities()->create([
             'date' => $this->date,
             'start_time' => $this->start_time,
             'end_time' => $this->end_time,
@@ -53,12 +56,19 @@ class ActivityForm extends Component
             'description' => $this->description,
         ]);
 
+        $user->addXp($durationMinutes);
+        $user->refresh();
+        $isLevelUp = $user->level > $oldLevel;
+
         $this->reset(['description']);
         $this->start_time = Carbon::now()->format('H:i');
         $this->end_time = Carbon::now()->addHour()->format('H:i');
         
-        session()->flash('message', 'Kegiatan berhasil dicatat!');
+        session()->flash('message', 'Kegiatan berhasil dicatat! (+XP)');
         $this->dispatch('activity-saved');
+        $this->dispatch('activity-added', [
+            'isLevelUp' => $isLevelUp,
+        ]);
     }
 
     public function render()

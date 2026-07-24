@@ -1,4 +1,13 @@
-<div class="bg-white/70 dark:bg-gray-900/60 backdrop-blur-xl border border-white/20 dark:border-gray-700/30 shadow-lg rounded-2xl relative overflow-hidden group">
+<div x-data
+     x-on:activity-added.window="
+        if (typeof window.triggerConfetti === 'function') window.triggerConfetti();
+        if ($event.detail && $event.detail.isLevelUp && typeof window.playLevelUpSound === 'function') {
+            window.playLevelUpSound();
+        } else if (typeof window.playVictorySound === 'function') {
+            window.playVictorySound();
+        }
+     "
+     class="bg-white/70 dark:bg-gray-900/60 backdrop-blur-xl border border-white/20 dark:border-gray-700/30 shadow-lg rounded-2xl relative overflow-hidden group">
     <!-- Subtle gradient border top -->
     <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 opacity-70"></div>
 

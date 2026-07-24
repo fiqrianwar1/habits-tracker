@@ -40,6 +40,8 @@ class DashboardStats extends Component
         $xpRequiredForNextLevel = max(1, $xpRequiredForNextLevel);
         $progressPercentage = min(100, round(($xpInCurrentLevel / $xpRequiredForNextLevel) * 100));
 
+        $streak = $user->streak;
+
         $this->userProfile = [
             'name' => $user->name,
             'level' => $currentLevel,
@@ -47,6 +49,8 @@ class DashboardStats extends Component
             'xp_current_level' => $xpInCurrentLevel,
             'xp_required' => $xpRequiredForNextLevel,
             'progress' => $progressPercentage,
+            'current_streak' => $streak['current'],
+            'best_streak' => $streak['best'],
         ];
 
         $this->userBadges = $user->badges()->get();

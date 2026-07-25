@@ -22,9 +22,12 @@ class CategoryTarget extends Model
         'minimum_hours_per_day' => 'decimal:2',
     ];
 
-    public const CATEGORIES = [
-        'Kerja', 'Olahraga', 'Bersih-bersih', 'Belajar', 'Main Game', 'Family Time'
-    ];
+    public const CATEGORIES = Category::DEFAULT_CATEGORIES;
+
+    public static function getCategories($user = null): array
+    {
+        return Category::getAllForUser($user);
+    }
 
     public function user()
     {

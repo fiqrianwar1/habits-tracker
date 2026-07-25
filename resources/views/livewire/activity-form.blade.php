@@ -28,27 +28,47 @@
                 <!-- Date -->
                 <div class="relative group/input">
                     <label for="date" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Tanggal</label>
-                    <div class="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg blur opacity-0 group-focus-within/input:opacity-30 transition duration-500"></div>
+                    <div class="pointer-events-none absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg blur opacity-0 group-focus-within/input:opacity-30 transition duration-500"></div>
                     <input type="date" id="date" wire:model="date" class="relative mt-1 block w-full border-0 bg-gray-50/50 dark:bg-black/40 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 rounded-lg shadow-inner py-2.5 px-4 transition-all duration-300">
                     @error('date') <span class="text-pink-500 text-xs font-semibold mt-1 block">{{ $message }}</span> @enderror
                 </div>
                 
                 <!-- Category -->
                 <div class="relative group/input">
-                    <label for="category" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Kategori</label>
-                    <div class="absolute -inset-0.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg blur opacity-0 group-focus-within/input:opacity-30 transition duration-500"></div>
-                    <select id="category" wire:model="category" class="relative mt-1 block w-full border-0 bg-gray-50/50 dark:bg-black/40 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 rounded-lg shadow-inner py-2.5 px-4 transition-all duration-300">
-                        @foreach($categories as $cat)
-                            <option value="{{ $cat }}" class="dark:bg-gray-800">{{ $cat }}</option>
-                        @endforeach
-                    </select>
+                    <div class="relative z-20 flex items-center justify-between mb-2">
+                        <label for="category" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Kategori</label>
+                        <button type="button" wire:click="$toggle('showNewCategoryInput')" class="relative z-20 text-xs font-semibold text-purple-600 dark:text-purple-400 hover:underline cursor-pointer">
+                            <span>{{ $showNewCategoryInput ? 'Batal' : '+ Tambah Kategori' }}</span>
+                        </button>
+                    </div>
+                    <div class="pointer-events-none absolute -inset-0.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg blur opacity-0 group-focus-within/input:opacity-30 transition duration-500"></div>
+                    
+                    @if(!$showNewCategoryInput)
+                        <div class="relative z-10">
+                            <select id="category" wire:model="category" class="relative mt-1 block w-full border-0 bg-gray-50/50 dark:bg-black/40 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 rounded-lg shadow-inner py-2.5 px-4 transition-all duration-300">
+                                @foreach($categories as $cat)
+                                    <option value="{{ $cat }}" class="dark:bg-gray-800">{{ $cat }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @else
+                        <div class="relative z-10 mt-1 flex gap-2">
+                            <input type="text" wire:model="newCategoryName" placeholder="Nama Kategori Baru" 
+                                   class="flex-1 border-0 bg-gray-50/50 dark:bg-black/40 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 rounded-lg shadow-inner py-2 px-3 text-sm" />
+                            <button type="button" wire:click="addCategory" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-lg shadow transition-all active:scale-95">
+                                Simpan
+                            </button>
+                        </div>
+                    @endif
+
                     @error('category') <span class="text-pink-500 text-xs font-semibold mt-1 block">{{ $message }}</span> @enderror
+                    @error('newCategoryName') <span class="text-pink-500 text-xs font-semibold mt-1 block">{{ $message }}</span> @enderror
                 </div>
 
                 <!-- Start Time -->
                 <div class="relative group/input">
                     <label for="start_time" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Jam Mulai</label>
-                    <div class="absolute -inset-0.5 bg-gradient-to-r from-pink-500 to-rose-500 rounded-lg blur opacity-0 group-focus-within/input:opacity-30 transition duration-500"></div>
+                    <div class="pointer-events-none absolute -inset-0.5 bg-gradient-to-r from-pink-500 to-rose-500 rounded-lg blur opacity-0 group-focus-within/input:opacity-30 transition duration-500"></div>
                     <input type="time" id="start_time" wire:model="start_time" class="relative mt-1 block w-full border-0 bg-gray-50/50 dark:bg-black/40 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-pink-500 rounded-lg shadow-inner py-2.5 px-4 transition-all duration-300">
                     @error('start_time') <span class="text-pink-500 text-xs font-semibold mt-1 block">{{ $message }}</span> @enderror
                 </div>
@@ -56,7 +76,7 @@
                 <!-- End Time -->
                 <div class="relative group/input">
                     <label for="end_time" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Jam Selesai</label>
-                    <div class="absolute -inset-0.5 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-lg blur opacity-0 group-focus-within/input:opacity-30 transition duration-500"></div>
+                    <div class="pointer-events-none absolute -inset-0.5 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-lg blur opacity-0 group-focus-within/input:opacity-30 transition duration-500"></div>
                     <input type="time" id="end_time" wire:model="end_time" class="relative mt-1 block w-full border-0 bg-gray-50/50 dark:bg-black/40 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-orange-500 rounded-lg shadow-inner py-2.5 px-4 transition-all duration-300">
                     @error('end_time') <span class="text-pink-500 text-xs font-semibold mt-1 block">{{ $message }}</span> @enderror
                 </div>
@@ -65,7 +85,7 @@
             <!-- Description -->
             <div class="mb-8 relative group/input">
                 <label for="description" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Deskripsi / Catatan (Opsional)</label>
-                <div class="absolute -inset-0.5 bg-gradient-to-r from-teal-500 to-indigo-500 rounded-lg blur opacity-0 group-focus-within/input:opacity-30 transition duration-500"></div>
+                <div class="pointer-events-none absolute -inset-0.5 bg-gradient-to-r from-teal-500 to-indigo-500 rounded-lg blur opacity-0 group-focus-within/input:opacity-30 transition duration-500"></div>
                 <textarea id="description" wire:model="description" rows="3" class="relative mt-1 block w-full border-0 bg-gray-50/50 dark:bg-black/40 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-teal-500 rounded-lg shadow-inner py-3 px-4 transition-all duration-300 placeholder-gray-400 dark:placeholder-gray-600" placeholder="Ceritain sedikit apa yang baru aja lo lakuin..."></textarea>
                 @error('description') <span class="text-pink-500 text-xs font-semibold mt-1 block">{{ $message }}</span> @enderror
             </div>

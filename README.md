@@ -16,14 +16,15 @@
 
 ## 🌟 Daftar Fitur Unggulan
 
-- 🍅 **Mode Fokus Pomodoro Interaktif:** Timer fokus (25m Focus, 5m Short Break, 15m Long Break) interaktif dengan auto-log kegiatan & pencatatan XP otomatis.
+- 🍅 **Mode Fokus Pomodoro Interaktif:** Timer fokus (25m, 15m, 45m, 60m + durasi kustom menit) interaktif dengan auto-log kegiatan & pencatatan XP otomatis.
+- 🏷️ **Kategori Dynamic & Custom:** Tambahkan, edit, dan hapus kategori kegiatan kustom kamu sendiri secara langsung di Pomodoro Timer, Catatan Kegiatan, dan Activity Plan.
 - 🔥 **Habit Streak Counter:** Lacak rekor konsistensi harian (*Current Streak* vs *Best Streak*) dengan indikator api interaktif.
 - 🎉 **Gamifikasi Audio-Visual & Leveling:** Sistem XP, efek suara *synth victory chime*, dan efek ledakan *confetti* perayaan saat menyelesaikan habit/naik level.
 - 🏆 **Koleksi Badge (Lencana Pencapaian):** Dapatkan badge bergengsi secara otomatis seiring meningkatnya produktivitas kamu.
 - 🤖 **AI Chatbot Widget:** Asisten cerdas berbasis AI bawaan yang siap memberikan motivasi, saran kebiasaan, dan bantuan kapan saja.
 - 📊 **Dashboard & Heatmap Kontribusi:** Grafik statistik produktivitas harian/tahunan serta *contribution heatmap* (ala GitHub) 365 hari terakhir.
-- 🎯 **Target & Plan Kategori:** Tetapkan dan evaluasi target hari & jam minimal harian per kategori aktivitas (Belajar, Pekerjaan, Kesehatan, dll).
-- 📝 **Track Record & Riwayat Aktivitas:** Filter, pencarian, dan pagination lengkap untuk meninjau kembali seluruh riwayat kegiatan.
+- 🎯 **Target & Plan Kategori:** Tetapkan dan evaluasi target hari & jam minimal harian per kategori aktivitas (Kerja, Olahraga, Belajar, dll).
+- 📝 **Track Record & Riwayat Aktivitas:** Filter, pencarian, dan pagination lengkap untuk meninjau kembali seluruh riwayat kegiatan dengan tata letak simetris.
 
 ---
 

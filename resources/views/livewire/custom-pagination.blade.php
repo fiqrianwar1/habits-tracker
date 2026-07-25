@@ -40,8 +40,8 @@
             @endforeach
         </div>
 
-        <!-- Next Page Link -->
-        <div>
+        <!-- Next Page Link (Offset from chatbot button) -->
+        <div class="mr-2 sm:mr-4">
             @if ($paginator->hasMorePages())
                 <button type="button" wire:click="nextPage('{{ $paginator->getPageName() }}')" wire:loading.attr="disabled" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700 shadow-sm transition-all duration-200 hover:scale-105 active:scale-95">
                     Next

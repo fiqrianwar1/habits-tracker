@@ -16,28 +16,36 @@ new class extends Component
     }
 }; ?>
 
-<nav x-data="{ open: false }" class="bg-white/40 dark:bg-gray-900/40 backdrop-blur-lg border-b border-white/20 dark:border-gray-700/30 sticky top-0 z-50">
+<nav x-data="{ open: false }" class="bg-white/70 dark:bg-gray-900/70 backdrop-blur-xl border-b border-white/20 dark:border-gray-800/50 sticky top-0 z-50 transition-colors duration-300 shadow-sm relative">
+    <!-- Top Gradient Accent Line -->
+    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
+
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}" wire:navigate>
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
+                    <a href="{{ route('dashboard') }}" wire:navigate class="transition-transform hover:scale-105">
+                        <x-application-logo class="block h-9 w-auto fill-current text-indigo-600 dark:text-indigo-400" />
                     </a>
                 </div>
 
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
-                        {{ __('Dashboard') }}
+                <!-- Navigation Links with SVG Icons -->
+                <div class="hidden space-x-6 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate class="flex items-center gap-2">
+                        <svg class="w-4 h-4 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                        <span>{{ __('Dashboard') }}</span>
                     </x-nav-link>
-                    <x-nav-link :href="route('history')" :active="request()->routeIs('history')" wire:navigate>
-                        {{ __('Track Record') }}
+                    
+                    <x-nav-link :href="route('history')" :active="request()->routeIs('history')" wire:navigate class="flex items-center gap-2">
+                        <svg class="w-4 h-4 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span>{{ __('Track Record') }}</span>
                     </x-nav-link>
-                    <x-nav-link :href="route('category-targets.index')" :active="request()->routeIs('category-targets.*')" wire:navigate>
-                        {{ __('Activity Plan') }}
+                    
+                    <x-nav-link :href="route('category-targets.index')" :active="request()->routeIs('category-targets.*')" wire:navigate class="flex items-center gap-2">
+                        <svg class="w-4 h-4 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+                        <span>{{ __('Activity Plan') }}</span>
                     </x-nav-link>
                 </div>
             </div>

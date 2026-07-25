@@ -19,7 +19,10 @@ class ActivityHistory extends Component
     public $editEndTime;
     public $editCategory;
     public $editDescription;
-    public $categories = \App\Models\CategoryTarget::CATEGORIES;
+    public function mount()
+    {
+        $this->categories = \App\Models\Category::getAllForUser(Auth::user());
+    }
 
     public function deleteActivity($id)
     {
@@ -84,6 +87,8 @@ class ActivityHistory extends Component
     #[Layout('layouts.app')]
     public function render()
     {
+        $this->categories = \App\Models\Category::getAllForUser(Auth::user());
+
         $activities = Auth::user()->activities()
             ->orderBy('date', 'desc')
             ->orderBy('start_time', 'desc')

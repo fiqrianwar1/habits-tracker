@@ -1,24 +1,42 @@
 <div x-data="{
     mode: 'focus', // focus, shortBreak, longBreak
     isRunning: false,
+    focusMinutes: 25,
+    shortBreakMinutes: 5,
+    longBreakMinutes: 15,
     timerSeconds: 25 * 60,
     totalSeconds: 25 * 60,
     interval: null,
     category: 'Belajar',
     description: 'Sesi Fokus Pomodoro',
 
+    applyDuration() {
+        let mins = 25;
+        if (this.mode === 'focus') {
+            mins = Math.max(1, parseInt(this.focusMinutes) || 25);
+        } else if (this.mode === 'shortBreak') {
+            mins = Math.max(1, parseInt(this.shortBreakMinutes) || 5);
+        } else if (this.mode === 'longBreak') {
+            mins = Math.max(1, parseInt(this.longBreakMinutes) || 15);
+        }
+        this.totalSeconds = mins * 60;
+        if (!this.isRunning) {
+            this.timerSeconds = this.totalSeconds;
+            this.updateTitle();
+        }
+    },
+
     setMode(newMode) {
         this.pause();
         this.mode = newMode;
-        if (newMode === 'focus') {
-            this.totalSeconds = 25 * 60;
-        } else if (newMode === 'shortBreak') {
-            this.totalSeconds = 5 * 60;
-        } else if (newMode === 'longBreak') {
-            this.totalSeconds = 15 * 60;
+        this.applyDuration();
+    },
+
+    setFocusMinutes(mins) {
+        this.focusMinutes = mins;
+        if (this.mode === 'focus') {
+            this.applyDuration();
         }
-        this.timerSeconds = this.totalSeconds;
-        this.updateTitle();
     },
 
     start() {
@@ -101,6 +119,11 @@ x-on:pomodoro-completed.window="
         window.playLevelUpSound();
     }
 "
+x-on:category-added.window="
+    if ($event.detail && $event.detail.category) {
+        category = $event.detail.category;
+    }
+"
 class="relative rounded-3xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl border border-slate-200/80 dark:border-slate-800/80 p-6 sm:p-8 shadow-2xl overflow-hidden transition-all duration-300">
     
     <!-- Top Gradient Accent Bar -->
@@ -127,30 +150,49 @@ class="relative rounded-3xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl b
             </div>
 
             <!-- Mode Selector Switches -->
-            <div class="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800/80 rounded-2xl border border-slate-200/80 dark:border-slate-700/60 text-xs font-semibold self-start sm:self-auto">
-                <!-- Focus -->
-                <button @click="setMode('focus')" 
-                        :class="mode === 'focus' ? 'bg-rose-500 text-white shadow-md shadow-rose-500/20' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'" 
-                        class="px-3.5 py-2 rounded-xl transition-all flex items-center gap-1.5 font-bold">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                    Fokus (25m)
-                </button>
-                
-                <!-- Short Break -->
-                <button @click="setMode('shortBreak')" 
-                        :class="mode === 'shortBreak' ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'" 
-                        class="px-3.5 py-2 rounded-xl transition-all flex items-center gap-1.5 font-bold">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    Break (5m)
-                </button>
-                
-                <!-- Long Break -->
-                <button @click="setMode('longBreak')" 
-                        :class="mode === 'longBreak' ? 'bg-blue-500 text-white shadow-md shadow-blue-500/20' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'" 
-                        class="px-3.5 py-2 rounded-xl transition-all flex items-center gap-1.5 font-bold">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-                    Istirahat (15m)
-                </button>
+            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                <!-- Duration Preset Quick Bar -->
+                <div x-show="mode === 'focus'" class="flex items-center gap-1.5 p-1 bg-slate-100 dark:bg-slate-800/80 rounded-2xl border border-slate-200/80 dark:border-slate-700/60 text-xs font-semibold">
+                    <span class="text-[10px] uppercase font-bold text-slate-400 px-2">Durasi:</span>
+                    <template x-for="mins in [15, 25, 45, 60]">
+                        <button type="button" @click="setFocusMinutes(mins)" 
+                                :class="focusMinutes == mins ? 'bg-rose-500 text-white shadow-sm font-extrabold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'"
+                                class="px-2.5 py-1 rounded-xl transition-all">
+                            <span x-text="mins + 'm'"></span>
+                        </button>
+                    </template>
+                    <div class="flex items-center gap-1 pl-1 pr-2">
+                        <input type="number" min="1" max="180" x-model.number="focusMinutes" @input="applyDuration()" @change="applyDuration()"
+                               class="w-12 py-0.5 px-1 text-xs text-center font-bold bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 focus:ring-1 focus:ring-rose-500" />
+                        <span class="text-[10px] font-bold text-slate-400">m</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800/80 rounded-2xl border border-slate-200/80 dark:border-slate-700/60 text-xs font-semibold self-start sm:self-auto shrink-0 flex-wrap sm:flex-nowrap">
+                    <!-- Focus -->
+                    <button @click="setMode('focus')" 
+                            :class="mode === 'focus' ? 'bg-rose-500 text-white shadow-md shadow-rose-500/20' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'" 
+                            class="px-3.5 py-2 rounded-xl transition-all inline-flex items-center gap-1.5 font-bold whitespace-nowrap shrink-0">
+                        <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        <span class="whitespace-nowrap">Fokus (<span x-text="focusMinutes + 'm'">25m</span>)</span>
+                    </button>
+                    
+                    <!-- Short Break -->
+                    <button @click="setMode('shortBreak')" 
+                            :class="mode === 'shortBreak' ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'" 
+                            class="px-3.5 py-2 rounded-xl transition-all inline-flex items-center gap-1.5 font-bold whitespace-nowrap shrink-0">
+                        <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="whitespace-nowrap">Break (<span x-text="shortBreakMinutes + 'm'">5m</span>)</span>
+                    </button>
+                    
+                    <!-- Long Break -->
+                    <button @click="setMode('longBreak')" 
+                            :class="mode === 'longBreak' ? 'bg-blue-500 text-white shadow-md shadow-blue-500/20' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'" 
+                            class="px-3.5 py-2 rounded-xl transition-all inline-flex items-center gap-1.5 font-bold whitespace-nowrap shrink-0">
+                        <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                        <span class="whitespace-nowrap">Istirahat (<span x-text="longBreakMinutes + 'm'">15m</span>)</span>
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -206,20 +248,37 @@ class="relative rounded-3xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl b
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" x-show="mode === 'focus'">
                     <!-- Category Select -->
                     <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">Kategori Aktivitas</label>
-                        <div class="relative">
-                            <select x-model="category" 
-                                    class="w-full rounded-2xl bg-slate-100 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700/80 text-sm font-semibold text-slate-900 dark:text-slate-100 px-4 py-3 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition-all appearance-none cursor-pointer shadow-sm">
-                                <option value="Belajar" class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">Belajar</option>
-                                <option value="Pekerjaan" class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">Pekerjaan</option>
-                                <option value="Kesehatan" class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">Kesehatan</option>
-                                <option value="Hiburan" class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">Hiburan</option>
-                                <option value="Lainnya" class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">Lainnya</option>
-                            </select>
-                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                            </div>
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Kategori Aktivitas</label>
+                            <button type="button" wire:click="$toggle('showNewCategoryInput')" class="text-[11px] font-bold text-rose-500 hover:text-rose-600 dark:text-rose-400 flex items-center gap-1 transition-colors cursor-pointer">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                <span>{{ $showNewCategoryInput ? 'Batal' : '+ Tambah' }}</span>
+                            </button>
                         </div>
+
+                        @if(!$showNewCategoryInput)
+                            <div class="relative">
+                                <select x-model="category" 
+                                        class="w-full rounded-2xl bg-slate-100 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700/80 text-sm font-semibold text-slate-900 dark:text-slate-100 px-4 py-3 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition-all appearance-none cursor-pointer shadow-sm">
+                                    @foreach($categories as $cat)
+                                        <option value="{{ $cat }}" class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">{{ $cat }}</option>
+                                    @endforeach
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                </div>
+                            </div>
+                        @else
+                            <!-- Add New Category Inline Input -->
+                            <div class="flex gap-2">
+                                <input type="text" wire:model="newCategoryName" placeholder="Nama Kategori Baru" 
+                                       class="flex-1 rounded-2xl bg-slate-100 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700/80 text-xs font-semibold text-slate-900 dark:text-slate-100 px-3 py-2.5 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition-all shadow-sm" />
+                                <button type="button" wire:click="addCategory" class="px-3 py-2.5 bg-rose-500 hover:bg-rose-600 text-white font-bold text-xs rounded-2xl shadow-md transition-all active:scale-95">
+                                    Simpan
+                                </button>
+                            </div>
+                            @error('newCategoryName') <span class="text-rose-500 text-[11px] font-semibold mt-1 block">{{ $message }}</span> @enderror
+                        @endif
                     </div>
 
                     <!-- Session Title Input -->

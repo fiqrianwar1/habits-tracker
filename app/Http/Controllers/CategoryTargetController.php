@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\CategoryTarget;
 use Illuminate\Validation\Rule;
 
+use App\Models\Category;
+
 class CategoryTargetController extends Controller
 {
     public function index()
@@ -16,17 +18,21 @@ class CategoryTargetController extends Controller
             ->where('month', date('n'))
             ->where('year', date('Y'))
             ->get();
-        $categories = CategoryTarget::CATEGORIES;
-        return view('category-targets.index', compact('targets', 'categories'));
+        $categories = Category::getAllForUser(Auth::user());
+        $customCategories = Category::where('user_id', Auth::id())->get();
+
+        return view('category-targets.index', compact('targets', 'categories', 'customCategories'));
     }
 
     public function store(Request $request)
     {
+        $categories = Category::getAllForUser(Auth::user());
+
         $request->validate([
             'category' => [
                 'required',
                 'string',
-                Rule::in(CategoryTarget::CATEGORIES),
+                Rule::in($categories),
                 Rule::unique('category_targets')->where(function ($query) {
                     return $query->where('user_id', Auth::id())
                                  ->where('month', date('n'))
@@ -51,17 +57,69 @@ class CategoryTargetController extends Controller
         return redirect()->route('category-targets.index')->with('success', 'Category target created successfully.');
     }
 
+    public function storeCategory(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:50',
+        ]);
+
+        $name = trim($request->name);
+        Category::firstOrCreate([
+            'user_id' => Auth::id(),
+            'name' => $name,
+        ]);
+
+        return redirect()->route('category-targets.index')->with('success', 'Kategori baru berhasil ditambahkan.');
+    }
+
+    public function updateCategory(Request $request, Category $category)
+    {
+        if ($category->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $request->validate([
+            'name' => 'required|string|max:50',
+        ]);
+
+        $newName = trim($request->name);
+        $oldName = $category->name;
+
+        if ($oldName !== $newName) {
+            $category->update(['name' => $newName]);
+
+            // Sync old category name in activities and category_targets
+            Auth::user()->activities()->where('category', $oldName)->update(['category' => $newName]);
+            Auth::user()->categoryTargets()->where('category', $oldName)->update(['category' => $newName]);
+        }
+
+        return redirect()->route('category-targets.index')->with('success', 'Kategori berhasil diperbarui.');
+    }
+
+    public function destroyCategory(Category $category)
+    {
+        if ($category->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $category->delete();
+
+        return redirect()->route('category-targets.index')->with('success', 'Kategori berhasil dihapus.');
+    }
+
     public function update(Request $request, CategoryTarget $categoryTarget)
     {
         if ($categoryTarget->user_id !== Auth::id()) {
             abort(403);
         }
 
+        $categories = Category::getAllForUser(Auth::user());
+
         $request->validate([
             'category' => [
                 'required',
                 'string',
-                Rule::in(CategoryTarget::CATEGORIES),
+                Rule::in($categories),
                 Rule::unique('category_targets')->where(function ($query) use ($categoryTarget) {
                     return $query->where('user_id', Auth::id())
                                  ->where('month', $categoryTarget->month)

@@ -6,6 +6,8 @@ use Livewire\Component;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
+use App\Models\Category;
+
 class ActivityForm extends Component
 {
     public $date;
@@ -13,8 +15,8 @@ class ActivityForm extends Component
     public $end_time;
     public $category = 'Kerja';
     public $description = '';
-
-    public $categories = \App\Models\CategoryTarget::CATEGORIES;
+    public $newCategoryName = '';
+    public $showNewCategoryInput = false;
 
     public function mount()
     {
@@ -22,6 +24,30 @@ class ActivityForm extends Component
         $this->date = $now->format('Y-m-d');
         $this->start_time = $now->format('H:i');
         $this->end_time = $now->addHour()->format('H:i');
+        
+        $categories = Category::getAllForUser(Auth::user());
+        if (!in_array($this->category, $categories)) {
+            $this->category = $categories[0] ?? 'Kerja';
+        }
+    }
+
+    public function addCategory()
+    {
+        $this->validate([
+            'newCategoryName' => 'required|string|max:50',
+        ]);
+
+        $name = trim($this->newCategoryName);
+        if ($name) {
+            Category::firstOrCreate([
+                'user_id' => Auth::id(),
+                'name' => $name,
+            ]);
+            $this->category = $name;
+            $this->newCategoryName = '';
+            $this->showNewCategoryInput = false;
+            $this->dispatch('category-added');
+        }
     }
 
     public function save()
@@ -73,6 +99,9 @@ class ActivityForm extends Component
 
     public function render()
     {
-        return view('livewire.activity-form');
+        $categories = Category::getAllForUser(Auth::user());
+        return view('livewire.activity-form', [
+            'categories' => $categories,
+        ]);
     }
 }

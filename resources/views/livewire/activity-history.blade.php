@@ -64,7 +64,7 @@
                 <div class="relative group/card bg-gray-50/50 dark:bg-black/20 border border-gray-100 dark:border-gray-800 rounded-xl p-3 transition-all duration-300 hover:shadow-[0_0_15px_rgba(56,189,248,0.2)] hover:border-cyan-500/30 hover:-translate-y-0.5">
                     
                     <!-- Glow effect behind card on hover -->
-                    <div class="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl blur opacity-0 group-hover/card:opacity-10 transition duration-500 z-0"></div>
+                    <div class="pointer-events-none absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl blur opacity-0 group-hover/card:opacity-10 transition duration-500 z-0"></div>
 
                     <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                         

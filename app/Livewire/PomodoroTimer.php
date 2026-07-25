@@ -6,16 +6,39 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Activity;
 
+use App\Models\Category;
+
 class PomodoroTimer extends Component
 {
     public $category = 'Belajar';
     public $description = 'Fokus Sesi Pomodoro';
     public $showModal = false;
-    
+    public $newCategoryName = '';
+    public $showNewCategoryInput = false;
+
     protected $rules = [
         'category' => 'required|string',
         'description' => 'nullable|string|max:255',
     ];
+
+    public function addCategory()
+    {
+        $this->validate([
+            'newCategoryName' => 'required|string|max:50',
+        ]);
+
+        $name = trim($this->newCategoryName);
+        if ($name) {
+            Category::firstOrCreate([
+                'user_id' => Auth::id(),
+                'name' => $name,
+            ]);
+            $this->category = $name;
+            $this->newCategoryName = '';
+            $this->showNewCategoryInput = false;
+            $this->dispatch('category-added', category: $name);
+        }
+    }
 
     public function completeSession($minutes, $category, $description)
     {
@@ -52,6 +75,13 @@ class PomodoroTimer extends Component
 
     public function render()
     {
-        return view('livewire.pomodoro-timer');
+        $categories = Category::getAllForUser(Auth::user());
+        if (!in_array($this->category, $categories)) {
+            $this->category = $categories[0] ?? 'Belajar';
+        }
+
+        return view('livewire.pomodoro-timer', [
+            'categories' => $categories,
+        ]);
     }
 }

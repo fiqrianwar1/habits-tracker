@@ -21,7 +21,6 @@ class ActivityHistory extends Component
     public $editDescription;
     public function mount()
     {
-        $this->categories = \App\Models\Category::getAllForUser(Auth::user());
     }
 
     public function deleteActivity($id)
@@ -87,7 +86,7 @@ class ActivityHistory extends Component
     #[Layout('layouts.app')]
     public function render()
     {
-        $this->categories = \App\Models\Category::getAllForUser(Auth::user());
+        $categories = \App\Models\Category::getAllForUser(Auth::user());
 
         $activities = Auth::user()->activities()
             ->orderBy('date', 'desc')
@@ -124,6 +123,7 @@ class ActivityHistory extends Component
 
         return view('livewire.activity-history', [
             'activities' => $activities,
+            'categories' => $categories,
             'categoryTargets' => $categoryTargets,
             'totalPercentage' => $totalPercentage,
             'hasTargets' => $targetCount > 0,

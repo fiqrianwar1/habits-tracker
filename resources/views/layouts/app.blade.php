@@ -17,41 +17,104 @@
         <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
         <script>
             // Audio Synth Helpers (Web Audio API - zero external files)
-            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            function getAudioContext() {
+                if (!window._audioCtx || window._audioCtx.state === 'closed') {
+                    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                    if (AudioCtx) {
+                        window._audioCtx = new AudioCtx();
+                    }
+                }
+                return window._audioCtx;
+            }
+
+            // Unlock Audio Context on user interaction
+            const unlockAudioContext = () => {
+                const ctx = getAudioContext();
+                if (ctx && ctx.state === 'suspended') {
+                    ctx.resume();
+                }
+            };
+            ['click', 'keydown', 'touchstart', 'submit'].forEach(evt => {
+                document.addEventListener(evt, unlockAudioContext, { passive: true });
+            });
 
             window.playVictorySound = function() {
-                if (audioCtx.state === 'suspended') audioCtx.resume();
-                const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
-                notes.forEach((freq, idx) => {
-                    const osc = audioCtx.createOscillator();
-                    const gain = audioCtx.createGain();
-                    osc.type = 'triangle';
-                    osc.frequency.value = freq;
-                    gain.gain.setValueAtTime(0.15, audioCtx.currentTime + idx * 0.1);
-                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + idx * 0.1 + 0.3);
-                    osc.connect(gain);
-                    gain.connect(audioCtx.destination);
-                    osc.start(audioCtx.currentTime + idx * 0.1);
-                    osc.stop(audioCtx.currentTime + idx * 0.1 + 0.3);
-                });
+                const ctx = getAudioContext();
+                if (!ctx) return;
+
+                const playNotes = () => {
+                    const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+                    const now = ctx.currentTime;
+                    notes.forEach((freq, idx) => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.type = 'sine';
+                        
+                        const noteStart = now + idx * 0.15;
+                        const noteDuration = 0.45;
+                        
+                        osc.frequency.setValueAtTime(freq, noteStart);
+                        gain.gain.setValueAtTime(0.001, noteStart);
+                        gain.gain.linearRampToValueAtTime(0.2, noteStart + 0.04);
+                        gain.gain.exponentialRampToValueAtTime(0.001, noteStart + noteDuration);
+                        
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.start(noteStart);
+                        osc.stop(noteStart + noteDuration);
+                    });
+                };
+
+                if (ctx.state === 'suspended') {
+                    ctx.resume().then(() => playNotes()).catch(playNotes);
+                } else {
+                    playNotes();
+                }
             };
 
             window.playLevelUpSound = function() {
-                if (audioCtx.state === 'suspended') audioCtx.resume();
-                const notes = [440, 554.37, 659.25, 880, 1108.73]; // A4, C#5, E5, A5, C#6
-                notes.forEach((freq, idx) => {
-                    const osc = audioCtx.createOscillator();
-                    const gain = audioCtx.createGain();
-                    osc.type = 'sine';
-                    osc.frequency.value = freq;
-                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime + idx * 0.12);
-                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + idx * 0.12 + 0.5);
-                    osc.connect(gain);
-                    gain.connect(audioCtx.destination);
-                    osc.start(audioCtx.currentTime + idx * 0.12);
-                    osc.stop(audioCtx.currentTime + idx * 0.12 + 0.5);
-                });
+                const ctx = getAudioContext();
+                if (!ctx) return;
+
+                const playNotes = () => {
+                    const notes = [440, 554.37, 659.25, 880, 1108.73]; // A4, C#5, E5, A5, C#6
+                    const now = ctx.currentTime;
+                    notes.forEach((freq, idx) => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.type = 'triangle';
+                        
+                        const noteStart = now + idx * 0.14;
+                        const noteDuration = 0.5;
+                        
+                        osc.frequency.setValueAtTime(freq, noteStart);
+                        gain.gain.setValueAtTime(0.001, noteStart);
+                        gain.gain.linearRampToValueAtTime(0.25, noteStart + 0.04);
+                        gain.gain.exponentialRampToValueAtTime(0.001, noteStart + noteDuration);
+                        
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.start(noteStart);
+                        osc.stop(noteStart + noteDuration);
+                    });
+                };
+
+                if (ctx.state === 'suspended') {
+                    ctx.resume().then(() => playNotes()).catch(playNotes);
+                } else {
+                    playNotes();
+                }
             };
+
+            // Global shortcut handler for Alt+Shift+R
+            document.addEventListener('keydown', (e) => {
+                if (e.altKey && e.shiftKey && (e.key === 'r' || e.key === 'R')) {
+                    e.preventDefault();
+                    if (typeof Livewire !== 'undefined') {
+                        Livewire.dispatch('activity-saved');
+                    }
+                }
+            });
 
             window.triggerConfetti = function() {
                 if (typeof confetti === 'function') {

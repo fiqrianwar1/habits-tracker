@@ -6,12 +6,19 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use App\Models\Activity;
 use Illuminate\Support\Carbon;
 
 class ActivityHistory extends Component
 {
     use WithPagination;
+
+    #[On('activity-saved')]
+    public function refreshHistory()
+    {
+        // Re-renders the component when an activity is added, updated, or deleted
+    }
 
     public $editingId = null;
     public $editDate;

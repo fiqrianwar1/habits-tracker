@@ -1,7 +1,8 @@
 <div x-data
      x-on:activity-added.window="
         if (typeof window.triggerConfetti === 'function') window.triggerConfetti();
-        if ($event.detail && $event.detail.isLevelUp && typeof window.playLevelUpSound === 'function') {
+        const detail = Array.isArray($event.detail) ? $event.detail[0] : $event.detail;
+        if (detail && detail.isLevelUp && typeof window.playLevelUpSound === 'function') {
             window.playLevelUpSound();
         } else if (typeof window.playVictorySound === 'function') {
             window.playVictorySound();

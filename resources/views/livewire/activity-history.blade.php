@@ -25,46 +25,70 @@
                 @forelse($activities as $activity)
                 @if($editingId === $activity->id)
                     <!-- Edit Form -->
-                    <div class="bg-gray-50/80 dark:bg-black/40 border border-indigo-500/50 rounded-xl p-4 shadow-lg relative z-20">
+                    <div class="bg-gray-50/80 dark:bg-black/40 border border-purple-500/50 rounded-xl p-4 shadow-lg relative z-20">
                         <form wire:submit.prevent="updateActivity" class="space-y-4">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
+                                <div class="relative group/input">
                                     <x-input-label for="editDate" :value="__('Tanggal')" />
-                                    <x-text-input wire:model="editDate" id="editDate" type="date" class="mt-1 block w-full bg-white dark:bg-gray-800" required />
+                                    <div class="pointer-events-none absolute -inset-0.5 mt-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg blur opacity-0 group-focus-within/input:opacity-30 transition duration-500"></div>
+                                    <input x-data x-init="flatpickr($el, { dateFormat: 'Y-m-d' })" wire:model="editDate" id="editDate" type="text" style="accent-color: #90c5ff;" class="relative mt-1 block w-full border-0 bg-gray-50/50 dark:bg-black/40 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 rounded-lg shadow-inner py-2.5 px-3 transition-all text-sm z-10" required />
                                 </div>
-                                <div>
+                                <div class="relative group/input">
                                     <x-input-label for="editCategory" :value="__('Kategori')" />
-                                    <select wire:model="editCategory" id="editCategory" class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" required>
-                                        @foreach($categories as $cat)
-                                            <option value="{{ $cat }}">{{ $cat }}</option>
-                                        @endforeach
-                                    </select>
+                                    <div class="pointer-events-none absolute -inset-0.5 mt-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg blur opacity-0 group-focus-within/input:opacity-30 transition duration-500"></div>
+                                    <div class="relative z-10" x-data="{ open: false, selectedCategory: @entangle('editCategory') }">
+                                        <button type="button" @click="open = !open" @click.away="open = false"
+                                            class="relative mt-1 w-full text-left border-0 bg-gray-50/50 dark:bg-black/40 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 rounded-lg shadow-inner py-2.5 px-3 transition-all text-sm z-10 flex items-center justify-between">
+                                            <span x-text="selectedCategory || 'Pilih Kategori'"></span>
+                                            <svg class="w-4 h-4 text-slate-400 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                        </button>
+                                        
+                                        <div x-cloak x-show="open" 
+                                            x-transition:enter="transition ease-out duration-200"
+                                            x-transition:enter-start="opacity-0 translate-y-[-10px]"
+                                            x-transition:enter-end="opacity-100 translate-y-0"
+                                            x-transition:leave="transition ease-in duration-150"
+                                            x-transition:leave-start="opacity-100 translate-y-0"
+                                            x-transition:leave-end="opacity-0 translate-y-[-10px]"
+                                            class="absolute z-[100] w-full mt-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl border border-slate-200 dark:border-slate-700/50 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.2)] overflow-hidden py-1">
+                                            @foreach($categories as $cat)
+                                                <button type="button" @click="selectedCategory = '{{ $cat }}'; open = false"
+                                                    class="w-full text-left px-4 py-2 text-sm transition-colors"
+                                                    :class="selectedCategory === '{{ $cat }}' ? 'bg-purple-50 dark:bg-purple-500/20 text-purple-600 dark:text-purple-400 font-bold' : 'text-gray-700 dark:text-gray-300 hover:bg-slate-50 dark:hover:bg-slate-800/80'">
+                                                    {{ $cat }}
+                                                </button>
+                                            @endforeach
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>
+                                <div class="relative group/input">
                                     <x-input-label for="editStartTime" :value="__('Jam Mulai')" />
-                                    <x-text-input wire:model="editStartTime" id="editStartTime" type="time" class="mt-1 block w-full bg-white dark:bg-gray-800" required />
+                                    <div class="pointer-events-none absolute -inset-0.5 mt-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg blur opacity-0 group-focus-within/input:opacity-30 transition duration-500"></div>
+                                    <input x-data x-init="flatpickr($el, { enableTime: true, noCalendar: true, dateFormat: 'H:i', time_24hr: true })" wire:model="editStartTime" id="editStartTime" type="text" style="accent-color: #90c5ff;" class="relative mt-1 block w-full border-0 bg-gray-50/50 dark:bg-black/40 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 rounded-lg shadow-inner py-2.5 px-3 transition-all text-sm z-10" required />
                                 </div>
-                                <div>
+                                <div class="relative group/input">
                                     <x-input-label for="editEndTime" :value="__('Jam Selesai')" />
-                                    <x-text-input wire:model="editEndTime" id="editEndTime" type="time" class="mt-1 block w-full bg-white dark:bg-gray-800" required />
+                                    <div class="pointer-events-none absolute -inset-0.5 mt-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg blur opacity-0 group-focus-within/input:opacity-30 transition duration-500"></div>
+                                    <input x-data x-init="flatpickr($el, { enableTime: true, noCalendar: true, dateFormat: 'H:i', time_24hr: true })" wire:model="editEndTime" id="editEndTime" type="text" style="accent-color: #90c5ff;" class="relative mt-1 block w-full border-0 bg-gray-50/50 dark:bg-black/40 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 rounded-lg shadow-inner py-2.5 px-3 transition-all text-sm z-10" required />
                                 </div>
                             </div>
-                            <div>
+                            <div class="relative group/input">
                                 <x-input-label for="editDescription" :value="__('Deskripsi')" />
-                                <textarea wire:model="editDescription" id="editDescription" class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm min-h-[80px]"></textarea>
+                                <div class="pointer-events-none absolute -inset-0.5 mt-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg blur opacity-0 group-focus-within/input:opacity-30 transition duration-500"></div>
+                                <textarea wire:model="editDescription" id="editDescription" class="relative mt-1 block w-full border-0 bg-gray-50/50 dark:bg-black/40 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 rounded-lg shadow-inner py-2.5 px-3 transition-all text-sm min-h-[80px] z-10"></textarea>
                             </div>
                             <div class="flex justify-end gap-2 pt-2">
-                                <button type="button" wire:click="cancelEdit" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg text-sm font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">Batal</button>
-                                <button type="submit" class="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg text-sm font-semibold hover:from-indigo-600 hover:to-purple-600 transition-colors">Simpan Perubahan</button>
+                                <button type="button" wire:click="cancelEdit" class="px-4 py-2 bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-xl text-sm font-semibold hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors">Batal</button>
+                                <button type="submit" class="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl text-sm font-bold hover:from-purple-600 hover:to-pink-600 shadow-md shadow-purple-500/20 transition-all active:scale-95">Simpan Perubahan</button>
                             </div>
                         </form>
                     </div>
                 @else
                 <!-- Timeline Card -->
-                <div class="relative group/card bg-gray-50/50 dark:bg-black/20 border border-gray-100 dark:border-gray-800 rounded-xl p-3 transition-all duration-300 hover:shadow-[0_0_15px_rgba(56,189,248,0.2)] hover:border-cyan-500/30 hover:-translate-y-0.5">
+                <div class="relative group/card bg-gray-50/50 dark:bg-black/20 border border-gray-100 dark:border-gray-800 rounded-xl p-3 transition-all duration-300 hover:shadow-[0_0_15px_rgba(168,85,247,0.2)] hover:border-purple-500/30 hover:-translate-y-0.5">
                     
                     <!-- Glow effect behind card on hover -->
-                    <div class="pointer-events-none absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl blur opacity-0 group-hover/card:opacity-10 transition duration-500 z-0"></div>
+                    <div class="pointer-events-none absolute -inset-0.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl blur opacity-0 group-hover/card:opacity-10 transition duration-500 z-0"></div>
 
                     <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                         
@@ -123,7 +147,7 @@
                             
                             <!-- Action Buttons -->
                             <div class="flex items-center gap-1 opacity-0 group-hover/card:opacity-100 transition-opacity duration-200">
-                                <button wire:click="editActivity({{ $activity->id }})" class="p-1.5 text-blue-500 hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-colors" title="Edit">
+                                <button wire:click="editActivity({{ $activity->id }})" class="p-1.5 text-purple-500 hover:text-purple-700 hover:bg-purple-50 dark:hover:bg-purple-900/30 rounded-lg transition-colors" title="Edit">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                                 </button>
                                 <button wire:click="deleteActivity({{ $activity->id }})" onclick="confirm('Yakin mau hapus kegiatan ini?') || event.stopImmediatePropagation()" class="p-1.5 text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors" title="Hapus">

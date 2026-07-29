@@ -257,23 +257,40 @@ class="relative rounded-3xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl b
                         </div>
 
                         @if(!$showNewCategoryInput)
-                            <div class="relative">
-                                <select x-model="category" 
-                                        class="w-full rounded-2xl bg-slate-100 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700/80 text-sm font-semibold text-slate-900 dark:text-slate-100 px-4 py-3 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition-all appearance-none cursor-pointer shadow-sm">
+                            <div class="relative group/input" x-data="{ open: false }">
+                                <div class="pointer-events-none absolute -inset-0.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg blur opacity-0 group-focus-within/input:opacity-30 transition duration-500"></div>
+                                <button type="button" @click="open = !open" @click.away="open = false"
+                                    class="relative mt-1 w-full text-left border-0 bg-gray-50/50 dark:bg-black/40 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 rounded-lg shadow-inner py-3 px-4 transition-all z-10 flex items-center justify-between">
+                                    <span x-text="category || 'Pilih Kategori'"></span>
+                                    <svg class="w-4 h-4 text-slate-400 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                </button>
+                                
+                                <div x-cloak x-show="open" 
+                                    x-transition:enter="transition ease-out duration-200"
+                                    x-transition:enter-start="opacity-0 translate-y-[-10px]"
+                                    x-transition:enter-end="opacity-100 translate-y-0"
+                                    x-transition:leave="transition ease-in duration-150"
+                                    x-transition:leave-start="opacity-100 translate-y-0"
+                                    x-transition:leave-end="opacity-0 translate-y-[-10px]"
+                                    class="absolute z-[100] w-full mt-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl border border-slate-200 dark:border-slate-700/50 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.2)] overflow-hidden py-1">
                                     @foreach($categories as $cat)
-                                        <option value="{{ $cat }}" class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">{{ $cat }}</option>
+                                        <button type="button" @click="category = '{{ $cat }}'; open = false"
+                                            class="w-full text-left px-4 py-2.5 text-sm transition-colors"
+                                            :class="category === '{{ $cat }}' ? 'bg-purple-50 dark:bg-purple-500/20 text-purple-600 dark:text-purple-400 font-bold' : 'text-gray-700 dark:text-gray-300 hover:bg-slate-50 dark:hover:bg-slate-800/80'">
+                                            {{ $cat }}
+                                        </button>
                                     @endforeach
-                                </select>
-                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                                 </div>
                             </div>
                         @else
                             <!-- Add New Category Inline Input -->
-                            <div class="flex gap-2">
-                                <input type="text" wire:model="newCategoryName" placeholder="Nama Kategori Baru" 
-                                       class="flex-1 rounded-2xl bg-slate-100 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700/80 text-xs font-semibold text-slate-900 dark:text-slate-100 px-3 py-2.5 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition-all shadow-sm" />
-                                <button type="button" wire:click="addCategory" class="px-3 py-2.5 bg-rose-500 hover:bg-rose-600 text-white font-bold text-xs rounded-2xl shadow-md transition-all active:scale-95">
+                            <div class="flex gap-2 relative z-10">
+                                <div class="relative flex-1 group/input">
+                                    <div class="pointer-events-none absolute -inset-0.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg blur opacity-0 group-focus-within/input:opacity-30 transition duration-500"></div>
+                                    <input type="text" wire:model="newCategoryName" placeholder="Nama Kategori Baru" 
+                                           class="relative block w-full border-0 bg-gray-50/50 dark:bg-black/40 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 rounded-lg shadow-inner py-2.5 px-3 text-sm transition-all" />
+                                </div>
+                                <button type="button" wire:click="addCategory" class="px-4 py-2.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold text-xs rounded-xl shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 hover:-translate-y-0.5 transition-all active:scale-95">
                                     Simpan
                                 </button>
                             </div>
@@ -282,10 +299,11 @@ class="relative rounded-3xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl b
                     </div>
 
                     <!-- Session Title Input -->
-                    <div>
+                    <div class="relative group/input">
                         <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">Nama Sesi (Opsional)</label>
+                        <div class="pointer-events-none absolute -inset-0.5 mt-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg blur opacity-0 group-focus-within/input:opacity-30 transition duration-500"></div>
                         <input type="text" x-model="description" placeholder="Misal: Belajar Laravel" 
-                               class="w-full rounded-2xl bg-slate-100 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700/80 text-sm font-semibold text-slate-900 dark:text-slate-100 px-4 py-3 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition-all shadow-sm placeholder-slate-400 dark:placeholder-slate-500" />
+                               class="relative mt-1 block w-full border-0 bg-gray-50/50 dark:bg-black/40 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 rounded-lg shadow-inner py-3 px-4 transition-all placeholder-slate-400 dark:placeholder-slate-500" />
                     </div>
                 </div>
 
@@ -316,7 +334,7 @@ class="relative rounded-3xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl b
                     </button>
 
                     <!-- Reset Button -->
-                    <button @click="reset()" class="px-5 py-4 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-sm rounded-2xl transition-all active:scale-95">
+                    <button @click="reset()" class="px-5 py-4 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-sm rounded-xl transition-all active:scale-95">
                         Reset
                     </button>
                 </div>

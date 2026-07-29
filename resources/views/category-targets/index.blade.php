@@ -37,8 +37,11 @@
                         <!-- Quick Add Custom Category Form -->
                         <form method="POST" action="{{ route('categories.store') }}" class="flex items-center gap-2">
                             @csrf
-                            <input type="text" name="name" placeholder="Tambah Kategori Baru" required class="rounded-xl border-0 bg-gray-50/70 dark:bg-black/40 text-gray-900 dark:text-gray-100 text-xs py-2 px-3 focus:ring-2 focus:ring-purple-500 shadow-inner" />
-                            <button type="submit" class="px-3 py-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold text-xs rounded-xl shadow transition-all active:scale-95 whitespace-nowrap">
+                            <div class="relative group/input">
+                                <div class="pointer-events-none absolute -inset-0.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg blur opacity-0 group-focus-within/input:opacity-30 transition duration-500"></div>
+                                <input type="text" name="name" placeholder="Tambah Kategori Baru" required class="relative rounded-xl border-0 bg-gray-50/70 dark:bg-black/40 text-gray-900 dark:text-gray-100 text-xs py-2 px-3 focus:ring-2 focus:ring-purple-500 shadow-inner transition-all" />
+                            </div>
+                            <button type="submit" class="px-3 py-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold text-xs rounded-xl shadow-md shadow-purple-500/20 transition-all active:scale-95 whitespace-nowrap">
                                 + Kategori
                             </button>
                         </form>
@@ -53,14 +56,31 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             <div class="group/input">
                                 <x-input-label for="category" :value="__('Kategori')" />
-                                <div class="relative">
+                                <div class="relative z-10" x-data="{ open: false, selectedCategory: '{{ old('category') }}' }">
                                     <div class="pointer-events-none absolute -inset-0.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg blur opacity-0 group-focus-within/input:opacity-30 transition duration-500"></div>
-                                    <select id="category" name="category" class="relative mt-1 block w-full border-0 bg-gray-50/50 dark:bg-black/40 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 rounded-lg shadow-inner py-2.5 px-4 transition-all duration-300" required autofocus>
-                                        <option value="" disabled selected>Pilih Kategori</option>
+                                    <input type="hidden" name="category" x-model="selectedCategory">
+                                    <button type="button" @click="open = !open" @click.away="open = false"
+                                        class="relative mt-1 w-full text-left border-0 bg-gray-50/50 dark:bg-black/40 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 rounded-lg shadow-inner py-2.5 px-4 transition-all duration-300 flex items-center justify-between z-10">
+                                        <span x-text="selectedCategory || 'Pilih Kategori'" :class="!selectedCategory ? 'text-gray-500 dark:text-gray-400' : ''"></span>
+                                        <svg class="w-4 h-4 text-slate-400 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                    </button>
+                                    
+                                    <div x-cloak x-show="open" 
+                                        x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="opacity-0 translate-y-[-10px]"
+                                        x-transition:enter-end="opacity-100 translate-y-0"
+                                        x-transition:leave="transition ease-in duration-150"
+                                        x-transition:leave-start="opacity-100 translate-y-0"
+                                        x-transition:leave-end="opacity-0 translate-y-[-10px]"
+                                        class="absolute z-[100] w-full mt-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl border border-slate-200 dark:border-slate-700/50 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.2)] overflow-hidden py-1">
                                         @foreach($categories as $cat)
-                                            <option value="{{ $cat }}" class="dark:bg-gray-800">{{ $cat }}</option>
+                                            <button type="button" @click="selectedCategory = '{{ $cat }}'; open = false"
+                                                class="w-full text-left px-4 py-2 text-sm transition-colors"
+                                                :class="selectedCategory === '{{ $cat }}' ? 'bg-purple-50 dark:bg-purple-500/20 text-purple-600 dark:text-purple-400 font-bold' : 'text-gray-700 dark:text-gray-300 hover:bg-slate-50 dark:hover:bg-slate-800/80'">
+                                                {{ $cat }}
+                                            </button>
                                         @endforeach
-                                    </select>
+                                    </div>
                                 </div>
                                 <x-input-error class="mt-2 text-pink-500" :messages="$errors->get('category')" />
                             </div>
@@ -68,8 +88,8 @@
                             <div class="group/input">
                                 <x-input-label for="target_days" :value="__('Target Hari (Sebulan)')" />
                                 <div class="relative flex items-center space-x-2">
-                                    <div class="pointer-events-none absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg blur opacity-0 group-focus-within/input:opacity-30 transition duration-500"></div>
-                                    <x-text-input id="target_days" name="target_days" type="number" min="1" max="31" class="relative mt-1 block w-full border-0 bg-gray-50/50 dark:bg-black/40 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 rounded-lg shadow-inner py-2.5 px-4 transition-all duration-300 placeholder-gray-400 dark:placeholder-gray-500" required placeholder="e.g. 24" />
+                                    <div class="pointer-events-none absolute -inset-0.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg blur opacity-0 group-focus-within/input:opacity-30 transition duration-500"></div>
+                                    <x-text-input id="target_days" name="target_days" type="number" min="1" max="31" class="relative mt-1 block w-full border-0 bg-gray-50/50 dark:bg-black/40 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 rounded-lg shadow-inner py-2.5 px-4 transition-all duration-300 placeholder-gray-400 dark:placeholder-gray-500" required placeholder="e.g. 24" />
                                     <span class="text-gray-900 dark:text-gray-100 font-bold ml-2">Hari</span>
                                 </div>
                                 <x-input-error class="mt-2 text-pink-500" :messages="$errors->get('target_days')" />
@@ -84,7 +104,7 @@
                                 <div class="mt-2 flex flex-wrap gap-3">
                                     @foreach(['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'] as $day)
                                         <label class="inline-flex items-center">
-                                            <input type="checkbox" name="target_days_of_week[]" value="{{ $day }}" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-purple-600 shadow-sm focus:ring-purple-500 dark:focus:ring-purple-600 dark:focus:ring-offset-gray-800">
+                                            <input type="checkbox" name="target_days_of_week[]" value="{{ $day }}" class="rounded border-0 bg-gray-50/50 dark:bg-black/40 text-purple-600 shadow-inner focus:ring-purple-500 dark:focus:ring-purple-500">
                                             <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">{{ $day }}</span>
                                         </label>
                                     @endforeach
@@ -96,8 +116,8 @@
                             <div class="group/input">
                                 <x-input-label for="minimum_hours_per_day" :value="__('Minimal Jam per Hari (Opsional)')" />
                                 <div class="relative flex items-center space-x-2">
-                                    <div class="pointer-events-none absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-teal-500 rounded-lg blur opacity-0 group-focus-within/input:opacity-30 transition duration-500"></div>
-                                    <x-text-input id="minimum_hours_per_day" name="minimum_hours_per_day" type="number" step="0.5" min="0" class="relative mt-1 block w-full border-0 bg-gray-50/50 dark:bg-black/40 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 rounded-lg shadow-inner py-2.5 px-4 transition-all duration-300 placeholder-gray-400 dark:placeholder-gray-500" placeholder="e.g. 1.5" />
+                                    <div class="pointer-events-none absolute -inset-0.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg blur opacity-0 group-focus-within/input:opacity-30 transition duration-500"></div>
+                                    <x-text-input id="minimum_hours_per_day" name="minimum_hours_per_day" type="number" step="0.5" min="0" class="relative mt-1 block w-full border-0 bg-gray-50/50 dark:bg-black/40 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 rounded-lg shadow-inner py-2.5 px-4 transition-all duration-300 placeholder-gray-400 dark:placeholder-gray-500" placeholder="e.g. 1.5" />
                                     <span class="text-gray-900 dark:text-gray-100 font-bold ml-2">Jam</span>
                                 </div>
                                 <x-input-error class="mt-2 text-pink-500" :messages="$errors->get('minimum_hours_per_day')" />
@@ -105,12 +125,9 @@
                         </div>
 
                         <div class="flex justify-start mt-6">
-                            <button type="submit" class="relative group inline-flex items-center justify-center px-6 py-2.5 font-bold text-white rounded-xl overflow-hidden shadow-[0_0_15px_rgba(168,85,247,0.4)] hover:shadow-[0_0_25px_rgba(236,72,153,0.6)] transition-all duration-300 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-offset-gray-900">
-                                <span class="absolute w-full h-full bg-gradient-to-br from-purple-500 to-pink-500 group-hover:from-pink-500 group-hover:to-rose-500 transition-all duration-500"></span>
-                                <span class="relative flex items-center gap-2">
-                                    Simpan Kategori Plan
-                                    <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-                                </span>
+                            <button type="submit" class="px-6 py-2.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold rounded-xl shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 active:scale-95">
+                                Simpan Kategori Plan
+                                <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                             </button>
                         </div>
                     </form>
@@ -154,9 +171,12 @@
                                 <form method="POST" action="{{ route('categories.update', $cat) }}" class="flex items-center gap-1.5 w-full">
                                     @csrf
                                     @method('PUT')
-                                    <input type="text" name="name" value="{{ $cat->name }}" required class="w-full text-xs font-semibold py-1 px-2 rounded-lg border border-purple-500 dark:bg-gray-800 dark:text-white" />
-                                    <button type="submit" class="px-2 py-1 bg-purple-600 text-white font-bold text-xs rounded-lg hover:bg-purple-700">OK</button>
-                                    <button type="button" @click="editing = false" class="px-2 py-1 bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-bold text-xs rounded-lg">x</button>
+                                    <div class="relative flex-1 group/input">
+                                        <div class="pointer-events-none absolute -inset-0.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg blur opacity-0 group-focus-within/input:opacity-30 transition duration-500"></div>
+                                        <input type="text" name="name" value="{{ $cat->name }}" required class="relative w-full text-xs font-semibold py-1.5 px-3 rounded-lg border-0 shadow-inner bg-gray-50/50 dark:bg-black/40 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 transition-all" />
+                                    </div>
+                                    <button type="submit" class="px-3 py-1.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold text-xs rounded-lg shadow-sm">OK</button>
+                                    <button type="button" @click="editing = false" class="px-2 py-1.5 bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-bold text-xs rounded-lg transition-colors">x</button>
                                 </form>
                             </template>
                         </div>

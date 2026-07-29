@@ -17,6 +17,8 @@
 ## 🌟 Daftar Fitur Unggulan
 
 - 🍅 **Mode Fokus Pomodoro Interaktif:** Timer fokus (25m, 15m, 45m, 60m + durasi kustom menit) interaktif dengan auto-log kegiatan & pencatatan XP otomatis.
+- 💎 **Premium Glassmorphic UI:** Antarmuka modern yang menyatu dengan efek transparan (kaca), bayangan lembut, dan warna responsif Light/Dark mode.
+- 🗓️ **Kustom UI Dropdown & Kalender:** Menggunakan Combo Box kustom interaktif (Alpine.js) dan kalender premium (Flatpickr) untuk penanggalan kegiatan.
 - 🏷️ **Kategori Dynamic & Custom:** Tambahkan, edit, dan hapus kategori kegiatan kustom kamu sendiri secara langsung di Pomodoro Timer, Catatan Kegiatan, dan Activity Plan.
 - 🔥 **Habit Streak Counter:** Lacak rekor konsistensi harian (*Current Streak* vs *Best Streak*) dengan indikator api interaktif.
 - 🎉 **Gamifikasi Audio-Visual & Leveling:** Sistem XP, efek suara *synth victory chime*, dan efek ledakan *confetti* perayaan saat menyelesaikan habit/naik level.
@@ -110,7 +112,7 @@ npx playwright test
 </p>
 
 - **Backend:** Laravel 11 (PHP 8.2+)
-- **Frontend:** Laravel Livewire 3, Alpine.js & Chart.js
+- **Frontend:** Laravel Livewire 3, Alpine.js, Chart.js & Flatpickr
 - **Styling:** Tailwind CSS (Custom Dark Mode & Glassmorphism)
 - **Database:** SQLite / MySQL
 - **Audio & Visual:** Web Audio API Synth & Canvas-Confetti

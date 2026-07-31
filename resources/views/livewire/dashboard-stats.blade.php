@@ -225,152 +225,179 @@
         </div>
     </div>
 
-    <script data-navigate-once>
-    document.addEventListener('livewire:navigated', () => {
-        // Cek apakah element canvas ada di halaman ini
-        if (!document.getElementById('yearlyChart')) return;
+    @script
+    <script>
+        const initCharts = () => {
+            if (!document.getElementById('yearlyChart')) return;
 
-        const isDark = document.documentElement.classList.contains('dark');
-        const textColor = isDark ? '#f3f4f6' : '#111827';
-        const gridColor = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
+            const isDark = document.documentElement.classList.contains('dark');
+            const textColor = isDark ? '#f3f4f6' : '#111827';
+            const gridColor = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
 
-        Chart.defaults.color = textColor;
-        Chart.defaults.borderColor = gridColor;
-        Chart.defaults.font.family = "'Figtree', sans-serif";
+            Chart.defaults.color = textColor;
+            Chart.defaults.borderColor = gridColor;
+            Chart.defaults.font.family = "'Figtree', sans-serif";
 
-        const yearlyData = @json($yearlyData);
-        const categoryData = @json($categoryData);
-        const dailyData = @json($dailyData);
+            const yearlyData = $wire.yearlyData;
+            const categoryData = $wire.categoryData;
+            const dailyData = $wire.dailyData;
 
-        // Hapus chart lama jika ada (untuk menghindari canvas is already in use error)
-        if (window.yearlyChartInstance) window.yearlyChartInstance.destroy();
-        if (window.categoryChartInstance) window.categoryChartInstance.destroy();
-        if (window.dailyChartInstance) window.dailyChartInstance.destroy();
+            if (window.yearlyChartInstance) window.yearlyChartInstance.destroy();
+            if (window.categoryChartInstance) window.categoryChartInstance.destroy();
+            if (window.dailyChartInstance) window.dailyChartInstance.destroy();
 
-        // 1. Yearly Chart (Bar)
-        const yearlyCtx = document.getElementById('yearlyChart').getContext('2d');
-        let gradientBar = yearlyCtx.createLinearGradient(0, 0, 0, 400);
-        gradientBar.addColorStop(0, 'rgba(99, 102, 241, 0.8)'); // Indigo
-        gradientBar.addColorStop(1, 'rgba(168, 85, 247, 0.2)'); // Purple
+            // 1. Yearly Chart (Bar)
+            const yearlyCtx = document.getElementById('yearlyChart').getContext('2d');
+            let gradientBar = yearlyCtx.createLinearGradient(0, 0, 0, 400);
+            gradientBar.addColorStop(0, 'rgba(99, 102, 241, 0.8)');
+            gradientBar.addColorStop(1, 'rgba(168, 85, 247, 0.2)');
 
-        window.yearlyChartInstance = new Chart(yearlyCtx, {
-            type: 'bar',
-            data: {
-                labels: yearlyData.labels,
-                datasets: [{
-                    label: 'Total Waktu (Jam)',
-                    data: yearlyData.data,
-                    backgroundColor: gradientBar,
-                    borderColor: '#818cf8',
-                    borderWidth: 1,
-                    borderRadius: 4,
-                    barPercentage: 0.7,
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        backgroundColor: isDark ? 'rgba(17, 24, 39, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-                        titleColor: isDark ? '#fff' : '#000',
-                        bodyColor: isDark ? '#fff' : '#000',
-                        borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)',
+            window.yearlyChartInstance = new Chart(yearlyCtx, {
+                type: 'bar',
+                data: {
+                    labels: yearlyData.labels,
+                    datasets: [{
+                        label: 'Total Waktu (Jam)',
+                        data: yearlyData.data,
+                        backgroundColor: gradientBar,
+                        borderColor: '#818cf8',
                         borderWidth: 1,
-                        padding: 12,
-                        cornerRadius: 8,
-                        displayColors: false
-                    }
+                        borderRadius: 4,
+                        barPercentage: 0.7,
+                    }]
                 },
-                scales: { 
-                    y: { beginAtZero: true, grid: { borderDash: [4, 4] } },
-                    x: { grid: { display: false } }
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: isDark ? 'rgba(17, 24, 39, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+                            titleColor: isDark ? '#fff' : '#000',
+                            bodyColor: isDark ? '#fff' : '#000',
+                            borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)',
+                            borderWidth: 1,
+                            padding: 12,
+                            cornerRadius: 8,
+                            displayColors: false
+                        }
+                    },
+                    scales: { 
+                        y: { beginAtZero: true, grid: { borderDash: [4, 4] } },
+                        x: { grid: { display: false } }
+                    }
                 }
-            }
-        });
+            });
 
-        // 2. Category Chart (Doughnut)
-        const categoryCtx = document.getElementById('categoryChart').getContext('2d');
-        const bgColors = ['#34d399', '#60a5fa', '#fbbf24', '#f87171', '#a78bfa', '#f472b6'];
+            // 2. Category Chart (Doughnut)
+            const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+            const bgColors = ['#34d399', '#60a5fa', '#fbbf24', '#f87171', '#a78bfa', '#f472b6'];
+            
+            window.categoryChartInstance = new Chart(categoryCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: categoryData.labels && categoryData.labels.length ? categoryData.labels : ['Belum ada data'],
+                    datasets: [{
+                        data: categoryData.data && categoryData.data.length ? categoryData.data : [1],
+                        backgroundColor: categoryData.data && categoryData.data.length ? bgColors : ['#374151'],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { padding: 20, usePointStyle: true, pointStyle: 'circle' }
+                        }
+                    }
+                }
+            });
+
+            // 3. Daily Progress Chart (Line)
+            const dailyCtx = document.getElementById('dailyChart').getContext('2d');
+            let gradientLine = dailyCtx.createLinearGradient(0, 0, 0, 400);
+            gradientLine.addColorStop(0, 'rgba(6, 182, 212, 0.5)');
+            gradientLine.addColorStop(1, 'rgba(6, 182, 212, 0.0)');
+
+            window.dailyChartInstance = new Chart(dailyCtx, {
+                type: 'line',
+                data: {
+                    labels: dailyData.labels && dailyData.labels.length ? dailyData.labels : ['Belum ada data'],
+                    datasets: [{
+                        label: 'Total Waktu (Jam)',
+                        data: dailyData.data && dailyData.data.length ? dailyData.data : [0],
+                        borderColor: '#22d3ee',
+                        backgroundColor: gradientLine,
+                        borderWidth: 3,
+                        pointBackgroundColor: '#22d3ee',
+                        pointBorderColor: isDark ? '#111827' : '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: isDark ? 'rgba(17, 24, 39, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+                            titleColor: isDark ? '#fff' : '#000',
+                            bodyColor: isDark ? '#fff' : '#000',
+                            borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)',
+                            borderWidth: 1,
+                            padding: 12,
+                            cornerRadius: 8,
+                            displayColors: false
+                        }
+                    },
+                    scales: { 
+                        y: { beginAtZero: true, grid: { borderDash: [4, 4] } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        };
+
+        initCharts();
         
-        window.categoryChartInstance = new Chart(categoryCtx, {
-            type: 'doughnut',
-            data: {
-                labels: categoryData.labels.length ? categoryData.labels : ['Belum ada data'],
-                datasets: [{
-                    data: categoryData.data.length ? categoryData.data : [1],
-                    backgroundColor: categoryData.data.length ? bgColors : ['#374151'],
-                    borderWidth: 0,
-                    hoverOffset: 10
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                cutout: '70%',
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: { padding: 20, usePointStyle: true, pointStyle: 'circle' }
-                    }
-                }
+        // Listener for Livewire navigation events (to re-init when navigating back to this page)
+        document.addEventListener('livewire:navigated', () => {
+            initCharts();
+        });
+
+        $wire.on('stats-updated', () => {
+            const yearlyData = $wire.yearlyData;
+            const categoryData = $wire.categoryData;
+            const dailyData = $wire.dailyData;
+
+            if (window.yearlyChartInstance && yearlyData) {
+                window.yearlyChartInstance.data.labels = yearlyData.labels;
+                window.yearlyChartInstance.data.datasets[0].data = yearlyData.data;
+                window.yearlyChartInstance.update();
+            }
+            
+            if (window.categoryChartInstance && categoryData) {
+                const bgColors = ['#34d399', '#60a5fa', '#fbbf24', '#f87171', '#a78bfa', '#f472b6'];
+                window.categoryChartInstance.data.labels = categoryData.labels && categoryData.labels.length ? categoryData.labels : ['Belum ada data'];
+                window.categoryChartInstance.data.datasets[0].data = categoryData.data && categoryData.data.length ? categoryData.data : [1];
+                window.categoryChartInstance.data.datasets[0].backgroundColor = categoryData.data && categoryData.data.length ? bgColors : ['#374151'];
+                window.categoryChartInstance.update();
+            }
+            
+            if (window.dailyChartInstance && dailyData) {
+                window.dailyChartInstance.data.labels = dailyData.labels && dailyData.labels.length ? dailyData.labels : ['Belum ada data'];
+                window.dailyChartInstance.data.datasets[0].data = dailyData.data && dailyData.data.length ? dailyData.data : [0];
+                window.dailyChartInstance.update();
             }
         });
-
-        // 3. Daily Progress Chart (Line)
-        const dailyCtx = document.getElementById('dailyChart').getContext('2d');
-        let gradientLine = dailyCtx.createLinearGradient(0, 0, 0, 400);
-        gradientLine.addColorStop(0, 'rgba(6, 182, 212, 0.5)'); // Cyan
-        gradientLine.addColorStop(1, 'rgba(6, 182, 212, 0.0)');
-
-        window.dailyChartInstance = new Chart(dailyCtx, {
-            type: 'line',
-            data: {
-                labels: dailyData.labels.length ? dailyData.labels : ['Belum ada data'],
-                datasets: [{
-                    label: 'Total Waktu (Jam)',
-                    data: dailyData.data.length ? dailyData.data : [0],
-                    borderColor: '#22d3ee', // Neon Cyan
-                    backgroundColor: gradientLine,
-                    borderWidth: 3,
-                    pointBackgroundColor: '#22d3ee',
-                    pointBorderColor: isDark ? '#111827' : '#ffffff',
-                    pointBorderWidth: 2,
-                    pointRadius: 4,
-                    pointHoverRadius: 6,
-                    fill: true,
-                    tension: 0.4 // Smooth curves
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        backgroundColor: isDark ? 'rgba(17, 24, 39, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-                        titleColor: isDark ? '#fff' : '#000',
-                        bodyColor: isDark ? '#fff' : '#000',
-                        borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)',
-                        borderWidth: 1,
-                        padding: 12,
-                        cornerRadius: 8,
-                        displayColors: false
-                    }
-                },
-                scales: { 
-                    y: { beginAtZero: true, grid: { borderDash: [4, 4] } },
-                    x: { grid: { display: false } }
-                }
-            }
-        });
-    });
-
-    document.addEventListener('livewire:initialized', () => {
-        Livewire.on('activity-saved', () => {
-            window.location.reload();
-        });
-    });
     </script>
+    @endscript
 </div>

@@ -188,6 +188,12 @@ class DashboardStats extends Component
             ];
         }
         $this->targetData = $targetData;
+
+        $this->dispatch('stats-updated', [
+            'yearlyData' => $this->yearlyData,
+            'categoryData' => $this->categoryData,
+            'dailyData' => $this->dailyData,
+        ]);
     }
 
     public function render()

@@ -54,7 +54,7 @@
                         @csrf
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <div class="group/input">
+                            <div class="relative group/input z-50">
                                 <x-input-label for="category" :value="__('Kategori')" />
                                 <div class="relative z-10" x-data="{ open: false, selectedCategory: '{{ old('category') }}' }">
                                     <div class="pointer-events-none absolute -inset-0.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg blur opacity-0 group-focus-within/input:opacity-30 transition duration-500"></div>

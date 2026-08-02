@@ -61,6 +61,11 @@ html.dark {
     fill: #f8fafc !important;
 }
 
+.dark .flatpickr-current-month .flatpickr-monthDropdown-months option {
+    background-color: #1e293b !important;
+    color: #f8fafc !important;
+}
+
 .dark .flatpickr-time input {
     color: #f8fafc !important;
 }

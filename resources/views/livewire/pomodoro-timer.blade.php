@@ -247,7 +247,7 @@ class="relative rounded-3xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl b
                 <!-- Category Select & Title Input (Only in Focus Mode) -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" x-show="mode === 'focus'">
                     <!-- Category Select -->
-                    <div>
+                    <div class="relative z-50">
                         <div class="flex items-center justify-between mb-2">
                             <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Kategori Aktivitas</label>
                             <button type="button" wire:click="$toggle('showNewCategoryInput')" class="text-[11px] font-bold text-rose-500 hover:text-rose-600 dark:text-rose-400 flex items-center gap-1 transition-colors cursor-pointer">

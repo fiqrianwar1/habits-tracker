@@ -35,7 +35,7 @@
                 </div>
                 
                 <!-- Category -->
-                <div class="relative group/input">
+                <div class="relative group/input z-50">
                     <div class="relative z-20 flex items-center justify-between mb-2">
                         <label for="category" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Kategori</label>
                         <button type="button" wire:click="$toggle('showNewCategoryInput')" class="relative z-20 text-xs font-semibold text-purple-600 dark:text-purple-400 hover:underline cursor-pointer">

@@ -33,7 +33,7 @@
                                     <div class="pointer-events-none absolute -inset-0.5 mt-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg blur opacity-0 group-focus-within/input:opacity-30 transition duration-500"></div>
                                     <input x-data x-init="flatpickr($el, { dateFormat: 'Y-m-d' })" wire:model="editDate" id="editDate" type="text" style="accent-color: #90c5ff;" class="relative mt-1 block w-full border-0 bg-gray-50/50 dark:bg-black/40 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 rounded-lg shadow-inner py-2.5 px-3 transition-all text-sm z-10" required />
                                 </div>
-                                <div class="relative group/input">
+                                <div class="relative group/input z-50">
                                     <x-input-label for="editCategory" :value="__('Kategori')" />
                                     <div class="pointer-events-none absolute -inset-0.5 mt-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg blur opacity-0 group-focus-within/input:opacity-30 transition duration-500"></div>
                                     <div class="relative z-10" x-data="{ open: false, selectedCategory: @entangle('editCategory') }">
